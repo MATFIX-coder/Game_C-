@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aksdi\\Desktop\\Game_C-\\ShahtyorGame\\ShahtyorGame.csproj",
+      "projectUniqueName": "C:\\Users\\aksdi\\Desktop\\Game_C-\\ShahtyorGame.csproj",
       "projectName": "ShahtyorGame",
-      "projectPath": "C:\\Users\\aksdi\\Desktop\\Game_C-\\ShahtyorGame\\ShahtyorGame.csproj",
+      "projectPath": "C:\\Users\\aksdi\\Desktop\\Game_C-\\ShahtyorGame.csproj",
       "packagesPath": "C:\\Users\\aksdi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aksdi\\Desktop\\Game_C-\\ShahtyorGame\\obj\\",
+      "outputPath": "C:\\Users\\aksdi\\Desktop\\Game_C-\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages"

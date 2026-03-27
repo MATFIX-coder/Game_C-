@@ -28,6 +28,12 @@ namespace ShahtyorGame.classes
             return Health > 0;
         }
 
+        public void UsePickaxe()
+        {
+            PickaxeStrength -= 1;
+            if (PickaxeStrength < 0)
+                PickaxeStrength = 0;
+        }
         public bool BrokePickaxe() //проверка целости кирки
         {
             return PickaxeStrength > 0;
