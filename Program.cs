@@ -1,16 +1,22 @@
-namespace ShahtyorGame;
+using System;
+using System.Windows.Forms;
+using ShahtyorGame.forms;
 
-static class Program
+namespace ShahtyorGame
 {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    static void Main()
+    internal static class Program
     {
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
-        ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
-    }    
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles(); //включаем визуал стили Windows
+            
+            Application.SetCompatibleTextRenderingDefault(false); //режим отображения текста
+            
+            Application.Run(new MainForm()); // запуск главной формы
+        }
+    }
 }
