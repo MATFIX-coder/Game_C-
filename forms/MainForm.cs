@@ -82,8 +82,6 @@ namespace ShahtyorGame.forms
             grid = new DataGridView(); //создаю разметку
             grid.Location = new Point(10, 100); 
             grid.Size = new Size(330, 330);
-            grid.ColumnCount = game.SizeMap; //кол-во стобцов и строк
-            grid.RowCount = game.SizeMap;
 
             grid.RowHeadersVisible = false; // скрыть заголовки строк и столбцов
             grid.ColumnHeadersVisible = false;
@@ -102,31 +100,75 @@ namespace ShahtyorGame.forms
             grid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter; //выравнивание по центру
 
             grid.Columns.Clear(); //очищаем столбца
+            grid.ColumnCount = game.SizeMap;
+            grid.RowCount = game.SizeMap;
+
+            // Настраиваю столбцы
             for (int i = 0; i < game.SizeMap; i++)
             {
-                //добавляю столбыцы
-                DataGridViewColumn column = new DataGridViewTextBoxColumn();
+                DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
                 column.Width = 55;
-                column.HeaderText = "";
-                column.SortMode = DataGridViewColumnSortMode.NotSortable; //без сортировки
-                grid.Columns.Add(column);
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
             }
 
-            grid.Rows.Clear(); //очищаем строки
+            // Создаём строки
             for (int i = 0; i < game.SizeMap; i++)
             {
-                //добавляю строки
-                grid.Rows.Add();
                 grid.Rows[i].Height = 55;
             }
 
             this.Controls.Add(grid); //добавляю разметку на форму
 
-            Label lblTemp = new Label();
-            lblTemp.Text = "Костя привет!";
-            lblTemp.Location = new Point(80, 440);
-            lblTemp.Size = new Size(200, 30);
-            this.Controls.Add(lblTemp);
+            UpdateGrid();
+            UpdateStats();
+        }
+
+        private void UpdateGrid()
+        {
+            for(int i = 0; i < game.SizeMap; i++)
+            {
+                for(int j = 0; j < game.SizeMap; j++)
+                {
+                    DataGridViewCell cell = grid.Rows[i].Cells[j];
+
+                    if (game.Player.X == i && game.Player.Y == j)
+                    {
+                        cell.Value = "⛏";
+                        continue;
+                    }
+
+                    if (!game.DetectedPlace[i, j])
+                    {
+                        cell.Value = "?";
+                        continue;
+                    }
+
+                    cell.Value = GetCellDisplay(i, j);
+                }
+            }
+        }
+
+        private string GetCellDisplay(int x, int y)
+        {
+            switch (game.Map[x, y])
+            {
+                case ShahtyorGame.enums.CellType.Artifact:
+                    return "💎";
+
+                case ShahtyorGame.enums.CellType.EmptyPoint:
+                    return ".";
+
+                default:
+                    return ".";
+            }
+        }
+
+        private void UpdateStats()
+        {
+            lblHealth.Text = "❤️ Здоровье: " + game.Player.Health;
+            lblPickaxe.Text = "⛏️ Кирка: " + game.Player.PickaxeStrength;
+            lblCoins.Text = "💰 Монеты: " + game.Player.Coins;
+            lblLevel.Text = "📊 Уровень: " + game.CurrentLevel;
         }
 
         private void InitializeComponent()
