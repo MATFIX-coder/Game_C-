@@ -99,7 +99,7 @@ namespace ShahtyorGame.forms
             grid.DefaultCellStyle.Font = new Font("Segoe UI Emoji", 18, FontStyle.Regular); //шрифт ячейки
             grid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter; //выравнивание по центру
 
-            grid.Columns.Clear(); //очищаем столбца
+            grid.Columns.Clear(); //очищаем столбцы
             grid.ColumnCount = game.SizeMap;
             grid.RowCount = game.SizeMap;
 
@@ -119,31 +119,31 @@ namespace ShahtyorGame.forms
 
             this.Controls.Add(grid); //добавляю разметку на форму
 
-            UpdateGrid();
-            UpdateStats();
+            UpdateGrid(); //обновляю содержимые клеток
+            UpdateStats(); //обновляю содержимое меток
         }
 
         private void UpdateGrid()
         {
             for(int i = 0; i < game.SizeMap; i++)
             {
-                for(int j = 0; j < game.SizeMap; j++)
+                for(int j = 0; j < game.SizeMap; j++) //пробегаю по каждой ячейке
                 {
-                    DataGridViewCell cell = grid.Rows[i].Cells[j];
+                    DataGridViewCell cell = grid.Rows[i].Cells[j]; //считываю ячейку
 
-                    if (game.Player.X == i && game.Player.Y == j)
+                    if (game.Player.X == i && game.Player.Y == j) //если там игрок
                     {
                         cell.Value = "⛏";
                         continue;
                     }
 
-                    if (!game.DetectedPlace[i, j])
+                    if (!game.DetectedPlace[i, j]) //если ячейка неизвестна нам
                     {
                         cell.Value = "?";
                         continue;
                     }
 
-                    cell.Value = GetCellDisplay(i, j);
+                    cell.Value = GetCellDisplay(i, j); //отрисовываем на основе назначения клетки
                 }
             }
         }
@@ -152,10 +152,10 @@ namespace ShahtyorGame.forms
         {
             switch (game.Map[x, y])
             {
-                case ShahtyorGame.enums.CellType.Artifact:
+                case ShahtyorGame.enums.CellType.Artifact: // если в клетке артефакт
                     return "💎";
 
-                case ShahtyorGame.enums.CellType.EmptyPoint:
+                case ShahtyorGame.enums.CellType.EmptyPoint: // если клетка открыта и пуста
                     return ".";
 
                 default:
@@ -163,7 +163,7 @@ namespace ShahtyorGame.forms
             }
         }
 
-        private void UpdateStats()
+        private void UpdateStats() //обновляю статистику
         {
             lblHealth.Text = "❤️ Здоровье: " + game.Player.Health;
             lblPickaxe.Text = "⛏️ Кирка: " + game.Player.PickaxeStrength;
