@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using ShahtyorGame.classes;
+using ShahtyorGame.enums;
 
 namespace ShahtyorGame.forms
 {
@@ -15,12 +16,15 @@ namespace ShahtyorGame.forms
         private Label lblPickaxe; //метка прочности
         private Label lblCoins; //метка монет
         private Label lblLevel; //метка уровня
+        private Label lblStatus; //метка события
 
         public MainForm() //основной конструктор игры
         {
             InitializeComponent();
 
             InitializeGame();
+
+            this.KeyDown += MainForm_KeyDown;
         }
 
         private void InitializeGame()
@@ -70,6 +74,17 @@ namespace ShahtyorGame.forms
             lblLevel.Size = new Size(150, 25);
             lblLevel.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblLevel.Text = "📊 Уровень: 1";
+
+            //Метка события
+            lblStatus = new Label();
+            lblStatus.Location = new Point(10, 440);
+            lblStatus.Size = new Size(330, 50);
+            lblStatus.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblStatus.BorderStyle = BorderStyle.FixedSingle;
+            lblStatus.BackColor = Color.White;
+            lblStatus.TextAlign = ContentAlignment.MiddleLeft;
+            this.Controls.Add(lblStatus);
+
 
             //добавляю метки на панель
             statsPanel.Controls.Add(lblHealth);
@@ -121,6 +136,7 @@ namespace ShahtyorGame.forms
 
             UpdateGrid(); //обновляю содержимые клеток
             UpdateStats(); //обновляю содержимое меток
+            UpdateStatus(); //обсновляю метку события
         }
 
         private void UpdateGrid()
@@ -134,16 +150,24 @@ namespace ShahtyorGame.forms
                     if (game.Player.X == i && game.Player.Y == j) //если там игрок
                     {
                         cell.Value = "⛏";
+                        cell.Style.BackColor = Color.LightBlue; //ячейка шахтера
                         continue;
                     }
 
                     if (!game.DetectedPlace[i, j]) //если ячейка неизвестна нам
                     {
                         cell.Value = "?";
+                        cell.Style.BackColor = Color.DarkGray;
                         continue;
                     }
 
                     cell.Value = GetCellDisplay(i, j); //отрисовываем на основе назначения клетки
+
+                    if (game.DetectedPlace[i, j]) //после того как посетили ячейку, то делаю белой
+                    {
+                        cell.Style.BackColor = Color.White;
+                        continue;
+                    }
                 }
             }
         }
@@ -169,6 +193,65 @@ namespace ShahtyorGame.forms
             lblPickaxe.Text = "⛏️ Кирка: " + game.Player.PickaxeStrength;
             lblCoins.Text = "💰 Монеты: " + game.Player.Coins;
             lblLevel.Text = "📊 Уровень: " + game.CurrentLevel;
+        }
+
+        private void UpdateStatus()
+        {
+            lblStatus.Text = "Статус: " + game.ActionMessage;
+
+            //цвет по умолчанию
+            lblStatus.BackColor = Color.White;
+            lblStatus.ForeColor = Color.Black;
+
+            //подсветка в зависимости от события
+            if (game.ActionMessage.Contains("добыт"))
+            {
+                lblStatus.BackColor = Color.LightGreen; //получилось сломать
+            }
+            else if (game.ActionMessage.Contains("слабая"))
+            {
+                lblStatus.BackColor = Color.Orange; //нехватает прочности
+            }
+            else if (game.ActionMessage.Contains("Пустая"))
+            {
+                lblStatus.BackColor = Color.Gray; //если клетка пустая
+            }
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool moved = false;
+
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    moved = game.TryMove(-1, 0);
+                    break;
+
+                case Keys.Down:
+                    moved = game.TryMove(1, 0);
+                    break;
+                
+                case Keys.Left:
+                    moved = game.TryMove(0, -1);
+                    break;
+                
+                case Keys.Right:
+                    moved = game.TryMove(0, 1);
+                    break;
+            }
+
+            if (moved)
+            {
+                UpdateGrid(); // обновляю ячейки
+                UpdateStats(); // обновляю метки
+                UpdateStatus(); //обновляю метку события
+            }
+
+            if (game.CollectedAllArtifacts())
+            {
+                MessageBox.Show("Ура! Все артефакты собраны!");
+            }
         }
 
         private void InitializeComponent()

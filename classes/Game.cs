@@ -10,6 +10,7 @@ namespace ShahtyorGame.classes
         public bool[,] DetectedPlace {get; private set;} //отображение скрыта ли место на поле
         public Player Player {get; private set; } //игрок
         public int CurrentLevel {get; private set; } //текущий левел
+        public string ActionMessage { get; private set; } //свойства для метки события
         private Random random = new Random();
 
         public Game(int size = 6) //констурктор игры
@@ -19,6 +20,7 @@ namespace ShahtyorGame.classes
             DetectedPlace = new bool[SizeMap, SizeMap];
             Player = new Player();
             CurrentLevel = 1;
+            ActionMessage = "Игра началась";
             GenerateLevel();
         }
 
@@ -79,15 +81,18 @@ namespace ShahtyorGame.classes
                         Player.PickaxeStrength -= 15;
                         Player.Coins += 10;
                         Map[newX, newY] = CellType.EmptyPoint;
+                        ActionMessage = "Артефакт добыт: +10 монет";
                     }
                     else
                     {
                         Player.UsePickaxe(); //если не хватает прочности, то просто переходим туда
+                        ActionMessage = "Найден артефакт, но кирка уже слишком сломанна";
                     }
                     break;
 
                 case CellType.EmptyPoint: //если пустая клетка(обычная), то тратится одна прочность
                     Player.UsePickaxe();
+                    ActionMessage = "Пустая клетка";
                     break;
             }
         }
