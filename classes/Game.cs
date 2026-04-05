@@ -1,5 +1,6 @@
 using System;
 using ShahtyorGame.enums;
+using ShahtyorGame.forms;
 
 namespace ShahtyorGame.classes
 {
@@ -34,7 +35,6 @@ namespace ShahtyorGame.classes
                     DetectedPlace[i, j] = false;
                 }
             }
-
             int artifactsCount = 3; //тестово устанавливаю 3 артифакта
             int setArtifactsCount = 0; //счетчик установленных
 
@@ -110,10 +110,13 @@ namespace ShahtyorGame.classes
             return true;
         }
 
-        public void ResetLevel() //оконачание уровня, сброс
+        public void NextLevel() //оконачание уровня, сброс
         {
-            Player.ResetPosition();
-            GenerateLevel();
+            Player.ResetPosition(); //сброс позиции
+            CurrentLevel++; //левел некст
+            Player.PickaxeStrength = 100; //обновляю кирку
+            ActionMessage = "Начался новый уровень";
+            GenerateLevel(); //запуск левела
         }
     }
 }

@@ -24,7 +24,7 @@ namespace ShahtyorGame.forms
 
             InitializeGame();
 
-            this.KeyDown += MainForm_KeyDown;
+            this.KeyDown += MainForm_Go;
         }
 
         private void InitializeGame()
@@ -33,7 +33,7 @@ namespace ShahtyorGame.forms
 
             this.Text = "Шахтёр: Тайны глубин"; //название окна
 
-            this.ClientSize = new Size(350, 550); //размер окна изначально
+            this.ClientSize = new Size(360, 550); //размер окна изначально
 
             this.StartPosition = FormStartPosition.CenterScreen; //окно запускается по центру
 
@@ -96,7 +96,7 @@ namespace ShahtyorGame.forms
 
             grid = new DataGridView(); //создаю разметку
             grid.Location = new Point(10, 100); 
-            grid.Size = new Size(330, 330);
+            grid.Size = new Size(330, 380);
 
             grid.RowHeadersVisible = false; // скрыть заголовки строк и столбцов
             grid.ColumnHeadersVisible = false;
@@ -111,19 +111,19 @@ namespace ShahtyorGame.forms
             grid.ReadOnly = true; //только для просмотра
 
             grid.SelectionMode = DataGridViewSelectionMode.CellSelect; //можно выделять ячейки
+            grid.DefaultCellStyle.SelectionBackColor = Color.White; //цвета фона при выделении
+            grid.DefaultCellStyle.SelectionForeColor = Color.Black; //цвет текста при выделении
             grid.DefaultCellStyle.Font = new Font("Segoe UI Emoji", 18, FontStyle.Regular); //шрифт ячейки
             grid.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter; //выравнивание по центру
 
-            grid.Columns.Clear(); //очищаем столбцы
-            grid.ColumnCount = game.SizeMap;
+            grid.ColumnCount = game.SizeMap; // кол-во строк и столбцов
             grid.RowCount = game.SizeMap;
 
             // Настраиваю столбцы
             for (int i = 0; i < game.SizeMap; i++)
             {
-                DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
-                column.Width = 55;
-                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+                grid.Columns[i].Width = 55;
+                grid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable; // без сортировки
             }
 
             // Создаём строки
@@ -151,6 +151,7 @@ namespace ShahtyorGame.forms
                     {
                         cell.Value = "⛏";
                         cell.Style.BackColor = Color.LightBlue; //ячейка шахтера
+                        cell.Style.ForeColor = Color.Black; //цвет символа
                         continue;
                     }
 
@@ -158,21 +159,19 @@ namespace ShahtyorGame.forms
                     {
                         cell.Value = "?";
                         cell.Style.BackColor = Color.DarkGray;
+                        cell.Style.ForeColor = Color.Black;
                         continue;
                     }
 
                     cell.Value = GetCellDisplay(i, j); //отрисовываем на основе назначения клетки
-
-                    if (game.DetectedPlace[i, j]) //после того как посетили ячейку, то делаю белой
-                    {
-                        cell.Style.BackColor = Color.White;
-                        continue;
-                    }
+                    cell.Style.BackColor = Color.White;
+                    cell.Style.ForeColor = Color.Black;
                 }
             }
+            grid.ClearSelection(); //убираю выделение серое с ячеек
         }
 
-        private string GetCellDisplay(int x, int y)
+        private string GetCellDisplay(int x, int y)//отрисовываем на основе назначения клетки
         {
             switch (game.Map[x, y])
             {
@@ -187,6 +186,26 @@ namespace ShahtyorGame.forms
             }
         }
 
+        private void ResetGrid() //обновление разметки, все пересоздаю
+        {
+            grid.Columns.Clear();
+            grid.Rows.Clear();
+
+            for (int i = 0; i < game.SizeMap; i++)
+            {
+                DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
+                column.Width = 55;
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+                grid.Columns.Add(column);
+            }
+
+            for (int i = 0; i < game.SizeMap; i++)
+            {
+                grid.Rows.Add();
+                grid.Rows[i].Height = 55;
+            }
+        }
+
         private void UpdateStats() //обновляю статистику
         {
             lblHealth.Text = "❤️ Здоровье: " + game.Player.Health;
@@ -195,7 +214,7 @@ namespace ShahtyorGame.forms
             lblLevel.Text = "📊 Уровень: " + game.CurrentLevel;
         }
 
-        private void UpdateStatus()
+        private void UpdateStatus() //метка статуса события
         {
             lblStatus.Text = "Статус: " + game.ActionMessage;
 
@@ -218,9 +237,9 @@ namespace ShahtyorGame.forms
             }
         }
 
-        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        private void MainForm_Go(object sender, KeyEventArgs e) //движение по полю
         {
-            bool moved = false;
+            bool moved = false; //флаг
 
             switch (e.KeyCode)
             {
@@ -241,16 +260,22 @@ namespace ShahtyorGame.forms
                     break;
             }
 
-            if (moved)
+            if (moved) //если получилось двигаться
             {
+                grid.ClearSelection(); //удаление выделения
                 UpdateGrid(); // обновляю ячейки
                 UpdateStats(); // обновляю метки
                 UpdateStatus(); //обновляю метку события
-            }
 
-            if (game.CollectedAllArtifacts())
-            {
-                MessageBox.Show("Ура! Все артефакты собраны!");
+                if (game.CollectedAllArtifacts()) //если собрал все артифакты
+                {
+                    MessageBox.Show("Ура! Все артефакты собраны! Переход на следующий уровень доступен!");
+                    game.NextLevel(); //загрузка нового левела
+                    ResetGrid(); //обновляю разметку
+                    UpdateGrid(); // обновляю ячейки
+                    UpdateStats(); // обновляю метки
+                    UpdateStatus(); //обновляю метку события
+                }
             }
         }
 
