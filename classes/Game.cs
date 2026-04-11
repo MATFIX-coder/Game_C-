@@ -1,6 +1,5 @@
 using System;
 using ShahtyorGame.enums;
-using ShahtyorGame.forms;
 
 namespace ShahtyorGame.classes
 {
@@ -11,8 +10,26 @@ namespace ShahtyorGame.classes
         public bool[,] DetectedPlace {get; private set;} //отображение скрыта ли место на поле
         public Player Player {get; private set; } //игрок
         public int CurrentLevel {get; private set; } //текущий левел
-        public string ActionMessage { get; private set; } //свойства для метки события
-        private Random random = new Random();
+        public string ActionMessage { get; set; } //свойства для метки события
+        private Random random = new Random(); // генератор случайных чисел
+        public bool SteppedOnMine { get; set; } // флаг игрок наступил на мину
+
+        // список всех анаграмм
+        private (string anagram, string correct, string hint)[] anagrams =
+        {
+            ("АКМЯИ", "МЫШКА", "Маленький грызун"),
+            ("НОСЛЕЦ", "СОЛНЦЕ", "Светит днём"),
+            ("АГНИК", "КНИГА", "Источник знаний"),
+            ("РОБАСТА", "РАБОТА", "То, что делаешь каждый день"),
+            ("ТОМОЛОК", "МОЛОТОК", "Инструмент для забивания"),
+        };
+
+        // берём случайную анаграмму из списка    
+        public (string anagram, string correct, string hint) GetRandomAnagram()
+        {
+            int index = random.Next(anagrams.Length); // случайный индекс
+            return anagrams[index]; // возвращаем данные для анаграммы
+        }
 
         public Game(int size = 6) //констурктор игры
         {
@@ -35,7 +52,7 @@ namespace ShahtyorGame.classes
                     DetectedPlace[i, j] = false;
                 }
             }
-            int artifactsCount = 3; //тестово устанавливаю 3 артифакта
+            int artifactsCount = 3; // количество артефактов на уровне
             int setArtifactsCount = 0; //счетчик установленных
 
             while (setArtifactsCount < artifactsCount) //цикл установки
@@ -43,12 +60,29 @@ namespace ShahtyorGame.classes
                 int x = random.Next(SizeMap);
                 int y = random.Next(SizeMap);
 
-                if ((x == 0 && y == 0) || Map[x, y] == CellType.Artifact) //проверка что это не начальная клетка и там не занято другим артифактом
+                if ((x == 0 && y == 0) || Map[x, y] != CellType.EmptyPoint) //проверка что это не начальная клетка и там не занято другим
                     continue;
                 
                 Map[x, y] = CellType.Artifact; //устанавливаю
                 setArtifactsCount++;
             }
+
+            int minesCount = 5;
+            int setMinesCount = 0;
+
+            while (setMinesCount < minesCount)
+            {
+                int x = random.Next(SizeMap);
+                int y = random.Next(SizeMap);
+
+                // Нельзя ставить мину на старт, артефакт или другую мину
+                if ((x == 0 && y == 0) || Map[x, y] != CellType.EmptyPoint)
+                    continue;
+
+                Map[x, y] = CellType.Mine;
+                setMinesCount++;
+            }
+
             DetectedPlace[0, 0] = true; //открываю начальную позицию
         }
 
@@ -60,7 +94,7 @@ namespace ShahtyorGame.classes
             if (newX < 0 || newY < 0 || newX >= SizeMap || newY >= SizeMap) //если не выходи за рамки
                 return false;
 
-            if (!Player.BrokePickaxe()) //если кирка еще не сломана
+            if (!Player.HasPickaxe()) //если кирка еще не сломана
                 return false;
 
             Player.X = newX;
@@ -71,7 +105,7 @@ namespace ShahtyorGame.classes
             return true;
         }
 
-        private void CellEffect(int newX, int newY)
+        private void CellEffect(int newX, int newY) // что происходит когда игрок наступает на клетку
         {
             switch(Map[newX, newY])
             {
@@ -90,11 +124,21 @@ namespace ShahtyorGame.classes
                     }
                     break;
 
+                case CellType.Mine:
+                    SteppedOnMine = true; //наступили на мину
+                    ActionMessage = "⚠️ Мина!";
+                    break;
+
                 case CellType.EmptyPoint: //если пустая клетка(обычная), то тратится одна прочность
                     Player.UsePickaxe();
                     ActionMessage = "Пустая клетка";
                     break;
             }
+        }
+
+        public void DefuseMine() //обезвреживаем мину
+        {
+            Map[Player.X, Player.Y] = CellType.EmptyPoint;
         }
 
         public bool CollectedAllArtifacts() //проверка, что собраны все артифакты(победа)
@@ -117,6 +161,29 @@ namespace ShahtyorGame.classes
             Player.PickaxeStrength = 100; //обновляю кирку
             ActionMessage = "Начался новый уровень";
             GenerateLevel(); //запуск левела
+        }
+
+        public int CountMinesAround(int x, int y) //считаем количество мин вокруг клетки
+        {
+            int count = 0;
+
+            for (int dx = -1; dx <= 1; dx++) // перебираем смещения по строке
+            {
+                for (int dy = -1; dy <= 1; dy++) // перебираем смещения по столбцу
+                {
+                    if (dx == 0 && dy == 0) continue; // пропускаем саму клетку
+
+                    int nx = x + dx; // координата соседа
+                    int ny = y + dy;
+
+                    // проверяем что не вышли за границы поля
+                    if (nx < 0 || ny < 0 || nx >= SizeMap || ny >= SizeMap) continue;
+
+                    if (Map[nx, ny] == CellType.Mine)
+                        count++; //нахожу мину
+                }
+            }
+            return count;
         }
     }
 }

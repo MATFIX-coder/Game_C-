@@ -35,7 +35,7 @@ namespace ShahtyorGame.classes
                 PickaxeStrength = 0;
         }
         
-        public bool BrokePickaxe() //проверка целости кирки
+        public bool HasPickaxe() //проверка целости кирки
         {
             return PickaxeStrength > 0;
         }

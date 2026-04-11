@@ -139,6 +139,20 @@ namespace ShahtyorGame.forms
             UpdateStatus(); //обсновляю метку события
         }
 
+        private Color GetHintColor(int x, int y) //цвет цифр как подсказок к минамс
+        {
+            int count = game.CountMinesAround(x, y);
+            switch (count)
+            {
+                case 1: return Color.Blue;
+                case 2: return Color.Green;
+                case 3: return Color.Red;
+                case 4: return Color.DarkBlue;
+                case 5: return Color.DarkRed;
+                default: return Color.Black;
+            }
+        }
+
         private void UpdateGrid()
         {
             for(int i = 0; i < game.SizeMap; i++)
@@ -163,9 +177,10 @@ namespace ShahtyorGame.forms
                         continue;
                     }
 
+                    //клетка открыта
                     cell.Value = GetCellDisplay(i, j); //отрисовываем на основе назначения клетки
                     cell.Style.BackColor = Color.White;
-                    cell.Style.ForeColor = Color.Black;
+                    cell.Style.ForeColor = GetHintColor(i, j);
                 }
             }
             grid.ClearSelection(); //убираю выделение серое с ячеек
@@ -179,6 +194,9 @@ namespace ShahtyorGame.forms
                     return "💎";
 
                 case ShahtyorGame.enums.CellType.EmptyPoint: // если клетка открыта и пуста
+                    int minesAround = game.CountMinesAround(x, y);
+                    if (minesAround > 0)
+                        return minesAround.ToString(); // показываем цифру
                     return ".";
 
                 default:
@@ -214,29 +232,23 @@ namespace ShahtyorGame.forms
             lblLevel.Text = "📊 Уровень: " + game.CurrentLevel;
         }
 
-        private void UpdateStatus() //метка статуса события
+        private void UpdateStatus() //обрабытываем события
         {
             lblStatus.Text = "Статус: " + game.ActionMessage;
-
-            //цвет по умолчанию
-            lblStatus.BackColor = Color.White;
             lblStatus.ForeColor = Color.Black;
 
-            //подсветка в зависимости от события
+            //устанавливаю цвет фона
             if (game.ActionMessage.Contains("добыт"))
-            {
-                lblStatus.BackColor = Color.LightGreen; //получилось сломать
-            }
-            else if (game.ActionMessage.Contains("слабая"))
-            {
-                lblStatus.BackColor = Color.Orange; //нехватает прочности
-            }
+                lblStatus.BackColor = Color.LightGreen;
+            else if (game.ActionMessage.Contains("Мина обезврежена"))
+                lblStatus.BackColor = Color.LightGreen;
+            else if (game.ActionMessage.Contains("взорвалась"))
+                lblStatus.BackColor = Color.Red;
             else if (game.ActionMessage.Contains("Пустая"))
-            {
-                lblStatus.BackColor = Color.Gray; //если клетка пустая
-            }
+                lblStatus.BackColor = Color.LightGray;
+            else
+                lblStatus.BackColor = Color.White;
         }
-
         private void MainForm_Go(object sender, KeyEventArgs e) //движение по полю
         {
             bool moved = false; //флаг
@@ -262,10 +274,37 @@ namespace ShahtyorGame.forms
 
             if (moved) //если получилось двигаться
             {
-                grid.ClearSelection(); //удаление выделения
-                UpdateGrid(); // обновляю ячейки
-                UpdateStats(); // обновляю метки
-                UpdateStatus(); //обновляю метку события
+                if (game.SteppedOnMine)
+                {
+                    game.SteppedOnMine = false; // сбрасываем флаг
+
+                    var anagram = game.GetRandomAnagram(); //берем анаграмму
+                    AnagramForm anagramForm = new AnagramForm(anagram.anagram, anagram.correct, anagram.hint);
+                    anagramForm.ShowDialog(); // открываем как диалог (блокирует игру)
+
+                    if (anagramForm.Solved) //решил
+                    {
+                        game.DefuseMine(); // обезвреживаем мину
+                        game.ActionMessage = "✅ Мина обезврежена!";
+                    }
+                    else
+                    {
+                        game.Player.Health -= 20;
+                        game.ActionMessage = "💥 Мина взорвалась! -20 здоровья";
+                    }
+                }
+
+                grid.ClearSelection();
+                UpdateGrid();
+                UpdateStats();
+                UpdateStatus();
+
+                // проверка поражения
+                if (!game.Player.IsAlive())
+                {
+                    MessageBox.Show("💀 Вы погибли! Игра окончена.");
+                    Application.Exit();
+                }
 
                 if (game.CollectedAllArtifacts()) //если собрал все артифакты
                 {
