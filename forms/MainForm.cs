@@ -12,7 +12,11 @@ namespace ShahtyorGame.forms
         private Game game; //Игра
         private DataGridView grid; //таблица разметка
 
+        private System.Windows.Forms.Timer pitWarningTimer;
+        private bool pitFlash;
+
         private Label lblHealth; //метка здоровья
+        private Label lblMaxHealth; //метка максимального здоровья
         private Label lblPickaxe; //метка прочности
         private Label lblCoins; //метка монет
         private Label lblLevel; //метка уровня
@@ -41,43 +45,59 @@ namespace ShahtyorGame.forms
 
             this.BackColor = Color.LightGray; //задний фон серый
 
+            pitWarningTimer = new System.Windows.Forms.Timer();
+            pitWarningTimer.Interval = 300;
+            pitWarningTimer.Tick += (s, e) =>
+            {
+                pitFlash = !pitFlash;
+                UpdateGrid();
+            };
+            pitWarningTimer.Start();
+
             Panel statsPanel = new Panel(); //панель для меток
             statsPanel.Location = new Point(10, 10);
-            statsPanel.Size = new Size(330, 80);
+            statsPanel.Size = new Size(340, 120);
             statsPanel.BackColor = Color.White;
             statsPanel.BorderStyle = BorderStyle.FixedSingle;
 
             //Метка Здоровье
             lblHealth = new Label();
-            lblHealth.Location = new Point(10, 10);
-            lblHealth.Size = new Size(150, 25);
+            lblHealth.Location = new Point(15, 12);
+            lblHealth.Size = new Size(160, 26);
             lblHealth.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblHealth.Text = "❤️ Здоровье: 100";
+            lblHealth.Text = "Здоровье: 100";
+
+            //Метка максимального здоровья
+            lblMaxHealth = new Label();
+            lblMaxHealth.Location = new Point(15, 38);
+            lblMaxHealth.Size = new Size(170, 26);
+            lblMaxHealth.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblMaxHealth.Text = "Макс. здоровье: 100";
 
             //Метка Прочности
             lblPickaxe = new Label();
-            lblPickaxe.Location = new Point(10, 40);
-            lblPickaxe.Size = new Size(150, 25);
+            lblPickaxe.Location = new Point(15, 64);
+            lblPickaxe.Size = new Size(160, 26);
             lblPickaxe.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblPickaxe.Text = "⛏️ Кирка: 100";
+            lblPickaxe.Text = "Кирка: 100";
 
             //Метка Монет
             lblCoins = new Label();
-            lblCoins.Location = new Point(170, 10);
-            lblCoins.Size = new Size(150, 25);
+            lblCoins.Location = new Point(190, 12);
+            lblCoins.Size = new Size(130, 26);
             lblCoins.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblCoins.Text = "💰 Монеты: 0";
+            lblCoins.Text = "Монеты: 0";
 
             //Метка Уровень
             lblLevel = new Label();
-            lblLevel.Location = new Point(170, 40);
-            lblLevel.Size = new Size(150, 25);
+            lblLevel.Location = new Point(190, 38);
+            lblLevel.Size = new Size(130, 26);
             lblLevel.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblLevel.Text = "📊 Уровень: 1";
+            lblLevel.Text = "Уровень: 1";
 
             //Метка события
             lblStatus = new Label();
-            lblStatus.Location = new Point(10, 440);
+            lblStatus.Location = new Point(10, 460);
             lblStatus.Size = new Size(330, 50);
             lblStatus.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblStatus.BorderStyle = BorderStyle.FixedSingle;
@@ -88,6 +108,7 @@ namespace ShahtyorGame.forms
 
             //добавляю метки на панель
             statsPanel.Controls.Add(lblHealth);
+            statsPanel.Controls.Add(lblMaxHealth);
             statsPanel.Controls.Add(lblPickaxe);
             statsPanel.Controls.Add(lblCoins);
             statsPanel.Controls.Add(lblLevel);
@@ -95,7 +116,7 @@ namespace ShahtyorGame.forms
             this.Controls.Add(statsPanel); //добавляю панель на форму
 
             grid = new DataGridView(); //создаю разметку
-            grid.Location = new Point(10, 100); 
+            grid.Location = new Point(10, 130); 
             grid.Size = new Size(330, 380);
 
             grid.RowHeadersVisible = false; // скрыть заголовки строк и столбцов
@@ -109,6 +130,8 @@ namespace ShahtyorGame.forms
 
             grid.ScrollBars = ScrollBars.None; //убрать скролл бар
             grid.ReadOnly = true; //только для просмотра
+            grid.TabStop = false; //чтобы grid не забирал фокус
+            grid.MultiSelect = false;
 
             grid.SelectionMode = DataGridViewSelectionMode.CellSelect; //можно выделять ячейки
             grid.DefaultCellStyle.SelectionBackColor = Color.White; //цвета фона при выделении
@@ -164,7 +187,12 @@ namespace ShahtyorGame.forms
                     if (game.Player.X == i && game.Player.Y == j) //если там игрок
                     {
                         cell.Value = "⛏";
-                        cell.Style.BackColor = Color.LightBlue; //ячейка шахтера
+
+                        if (game.IsPlayerNearPit() && pitFlash)
+                            cell.Style.BackColor = Color.Red;
+                        else
+                            cell.Style.BackColor = Color.LightBlue; //ячейка шахтера
+
                         cell.Style.ForeColor = Color.Black; //цвет символа
                         continue;
                     }
@@ -192,6 +220,9 @@ namespace ShahtyorGame.forms
             {
                 case ShahtyorGame.enums.CellType.Artifact: // если в клетке артефакт
                     return "💎";
+
+                case ShahtyorGame.enums.CellType.Pit:
+                    return "🕳";
 
                 case ShahtyorGame.enums.CellType.EmptyPoint: // если клетка открыта и пуста
                     int minesAround = game.CountMinesAround(x, y);
@@ -227,6 +258,7 @@ namespace ShahtyorGame.forms
         private void UpdateStats() //обновляю статистику
         {
             lblHealth.Text = "❤️ Здоровье: " + game.Player.Health;
+            lblMaxHealth.Text = "Макс. здоровье: " + game.Player.MaxHealth;
             lblPickaxe.Text = "⛏️ Кирка: " + game.Player.PickaxeStrength;
             lblCoins.Text = "💰 Монеты: " + game.Player.Coins;
             lblLevel.Text = "📊 Уровень: " + game.CurrentLevel;
@@ -270,7 +302,13 @@ namespace ShahtyorGame.forms
                 case Keys.Right:
                     moved = game.TryMove(0, 1);
                     break;
+                
+                default:
+                    return;
             }
+
+            e.Handled = true;
+            e.SuppressKeyPress = true;
 
             if (moved) //если получилось двигаться
             {
@@ -314,6 +352,7 @@ namespace ShahtyorGame.forms
                     UpdateGrid(); // обновляю ячейки
                     UpdateStats(); // обновляю метки
                     UpdateStatus(); //обновляю метку события
+                    this.Focus();
                 }
             }
         }

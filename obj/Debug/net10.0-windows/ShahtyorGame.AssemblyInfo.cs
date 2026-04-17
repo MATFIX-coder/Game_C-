@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ShahtyorGame")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+84a8c148492c4227dce10c038d70312f17e31c7f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f71f1b020f3e74d506c7a7fcbfebad0722978de2")]
 [assembly: System.Reflection.AssemblyProductAttribute("ShahtyorGame")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ShahtyorGame")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

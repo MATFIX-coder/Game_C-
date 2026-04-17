@@ -67,7 +67,7 @@ namespace ShahtyorGame.classes
                 setArtifactsCount++;
             }
 
-            int minesCount = 5;
+            int minesCount = 2;
             int setMinesCount = 0;
 
             while (setMinesCount < minesCount)
@@ -83,11 +83,29 @@ namespace ShahtyorGame.classes
                 setMinesCount++;
             }
 
+            int pitsCount = 2;
+            int setPitsCount = 0;
+
+            while (setPitsCount < pitsCount)
+            {
+                int x = random.Next(SizeMap);
+                int y = random.Next(SizeMap);
+
+                if ((x == 0 && y == 0) || Map[x, y] != CellType.EmptyPoint)
+                    continue;
+
+                Map[x, y] = CellType.Pit;
+                setPitsCount++;
+            }
+
             DetectedPlace[0, 0] = true; //открываю начальную позицию
         }
 
         public bool TryMove(int goX, int goY) //возможно движение?
         {
+            int oldX = Player.X;
+            int oldY = Player.Y;
+
             int newX = Player.X + goX;
             int newY = Player.Y + goY;
 
@@ -101,11 +119,11 @@ namespace ShahtyorGame.classes
             Player.Y = newY;
             DetectedPlace[newX, newY] = true;
 
-            CellEffect(newX, newY); //реакция на клетку перемещение
+            CellEffect(oldX, oldY, newX, newY); //реакция на клетку перемещение
             return true;
         }
 
-        private void CellEffect(int newX, int newY) // что происходит когда игрок наступает на клетку
+        private void CellEffect(int oldX, int oldY, int newX, int newY) // что происходит когда игрок наступает на клетку
         {
             switch(Map[newX, newY])
             {
@@ -129,6 +147,24 @@ namespace ShahtyorGame.classes
                     ActionMessage = "⚠️ Мина!";
                     break;
 
+                case CellType.Pit:
+                    DetectedPlace[newX, newY] = true;
+
+                    Player.X = oldX; //отбрасываем назад
+                    Player.Y = oldY;
+
+                    Player.Health /= 2; //текущее здоровье режем пополам
+
+                    Player.MaxHealth -= 10; //максимум здоровья уменьшаем на 10
+                    if (Player.MaxHealth < 20)
+                        Player.MaxHealth = 20;
+
+                    if (Player.Health > Player.MaxHealth)
+                        Player.Health = Player.MaxHealth;
+
+                    ActionMessage = "🕳 Пропасть! -50% здоровья и -10 к максимуму";
+                    break;
+
                 case CellType.EmptyPoint: //если пустая клетка(обычная), то тратится одна прочность
                     Player.UsePickaxe();
                     ActionMessage = "Пустая клетка";
@@ -139,6 +175,29 @@ namespace ShahtyorGame.classes
         public void DefuseMine() //обезвреживаем мину
         {
             Map[Player.X, Player.Y] = CellType.EmptyPoint;
+        }
+
+        public bool IsPlayerNearPit()
+        {
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    if (dx == 0 && dy == 0)
+                        continue;
+
+                    int nx = Player.X + dx;
+                    int ny = Player.Y + dy;
+
+                    if (nx < 0 || ny < 0 || nx >= SizeMap || ny >= SizeMap)
+                        continue;
+
+                    if (Map[nx, ny] == CellType.Pit)
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         public bool CollectedAllArtifacts() //проверка, что собраны все артифакты(победа)

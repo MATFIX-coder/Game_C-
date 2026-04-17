@@ -5,6 +5,7 @@ namespace ShahtyorGame.classes
         public int X {get; set; } //позиция по иксу
         public int Y {get; set; } //позиция по игрику
         public int Health {get; set; } //здоровье
+        public int MaxHealth { get; set; } //максимальное здоровье
         public int PickaxeStrength {get; set; } //прочность кирки
         public int Coins {get; set; } //кол-во монет
 
@@ -13,6 +14,7 @@ namespace ShahtyorGame.classes
             X = 0;
             Y = 0;
             Health = 100;
+            MaxHealth = 100;
             PickaxeStrength = 100;
             Coins = 0;
         }
