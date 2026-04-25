@@ -2,47 +2,42 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using ShahtyorGame.classes;
+using ShahtyorGame.controllers;
 using ShahtyorGame.enums;
 
 namespace ShahtyorGame.forms
 {
-
     public partial class MainForm : Form
     {
         private Game game; //Игра
+        private GameController controller; // контроллер — обрабатывает логику
         private DataGridView grid; //таблица разметка
 
-        private System.Windows.Forms.Timer pitWarningTimer;
-        private bool pitFlash;
-
         private Label lblHealth; //метка здоровья
-        private Label lblMaxHealth; //метка максимального здоровья
         private Label lblPickaxe; //метка прочности
         private Label lblCoins; //метка монет
         private Label lblLevel; //метка уровня
         private Label lblStatus; //метка события
 
+        private System.Windows.Forms.Timer pitWarningTimer; // таймер мигания при пропасти
+        private bool pitFlash = false; // флаг состояния мигания — true/false чередуется
+
         public MainForm() //основной конструктор игры
         {
             InitializeComponent();
-
             InitializeGame();
-
             this.KeyDown += MainForm_Go;
         }
 
         private void InitializeGame()
         {
             game = new Game(6); //инициализируем размер поля
+            controller = new GameController(game, this); // создаём контроллер
 
             this.Text = "Шахтёр: Тайны глубин"; //название окна
-
             this.ClientSize = new Size(360, 550); //размер окна изначально
-
             this.StartPosition = FormStartPosition.CenterScreen; //окно запускается по центру
-
-            this.KeyPreview = true; //!узнать
-
+            this.KeyPreview = true; // форма перехватывает нажатия клавиш раньше дочерних элементов
             this.BackColor = Color.LightGray; //задний фон серый
 
             pitWarningTimer = new System.Windows.Forms.Timer();
@@ -56,48 +51,41 @@ namespace ShahtyorGame.forms
 
             Panel statsPanel = new Panel(); //панель для меток
             statsPanel.Location = new Point(10, 10);
-            statsPanel.Size = new Size(340, 120);
+            statsPanel.Size = new Size(330, 80);
             statsPanel.BackColor = Color.White;
             statsPanel.BorderStyle = BorderStyle.FixedSingle;
 
             //Метка Здоровье
             lblHealth = new Label();
-            lblHealth.Location = new Point(15, 12);
-            lblHealth.Size = new Size(160, 26);
+            lblHealth.Location = new Point(10, 10);
+            lblHealth.Size = new Size(150, 25);
             lblHealth.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblHealth.Text = "Здоровье: 100";
-
-            //Метка максимального здоровья
-            lblMaxHealth = new Label();
-            lblMaxHealth.Location = new Point(15, 38);
-            lblMaxHealth.Size = new Size(170, 26);
-            lblMaxHealth.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblMaxHealth.Text = "Макс. здоровье: 100";
+            lblHealth.Text = "❤️ Здоровье: 100";
 
             //Метка Прочности
             lblPickaxe = new Label();
-            lblPickaxe.Location = new Point(15, 64);
-            lblPickaxe.Size = new Size(160, 26);
+            lblPickaxe.Location = new Point(10, 40);
+            lblPickaxe.Size = new Size(150, 25);
             lblPickaxe.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblPickaxe.Text = "Кирка: 100";
+            lblPickaxe.Text = "⛏️ Кирка: 100";
 
             //Метка Монет
             lblCoins = new Label();
-            lblCoins.Location = new Point(190, 12);
-            lblCoins.Size = new Size(130, 26);
+            lblCoins.Location = new Point(170, 10);
+            lblCoins.Size = new Size(150, 25);
             lblCoins.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblCoins.Text = "Монеты: 0";
+            lblCoins.Text = "💰 Монеты: 0";
 
             //Метка Уровень
             lblLevel = new Label();
-            lblLevel.Location = new Point(190, 38);
-            lblLevel.Size = new Size(130, 26);
+            lblLevel.Location = new Point(170, 40);
+            lblLevel.Size = new Size(150, 25);
             lblLevel.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblLevel.Text = "Уровень: 1";
+            lblLevel.Text = "📊 Уровень: 1";
 
             //Метка события
             lblStatus = new Label();
-            lblStatus.Location = new Point(10, 460);
+            lblStatus.Location = new Point(10, 440);
             lblStatus.Size = new Size(330, 50);
             lblStatus.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblStatus.BorderStyle = BorderStyle.FixedSingle;
@@ -105,18 +93,15 @@ namespace ShahtyorGame.forms
             lblStatus.TextAlign = ContentAlignment.MiddleLeft;
             this.Controls.Add(lblStatus);
 
-
             //добавляю метки на панель
             statsPanel.Controls.Add(lblHealth);
-            statsPanel.Controls.Add(lblMaxHealth);
             statsPanel.Controls.Add(lblPickaxe);
             statsPanel.Controls.Add(lblCoins);
             statsPanel.Controls.Add(lblLevel);
-
             this.Controls.Add(statsPanel); //добавляю панель на форму
 
             grid = new DataGridView(); //создаю разметку
-            grid.Location = new Point(10, 130); 
+            grid.Location = new Point(10, 100);
             grid.Size = new Size(330, 380);
 
             grid.RowHeadersVisible = false; // скрыть заголовки строк и столбцов
@@ -162,7 +147,7 @@ namespace ShahtyorGame.forms
             UpdateStatus(); //обсновляю метку события
         }
 
-        private Color GetHintColor(int x, int y) //цвет цифр как подсказок к минамс
+        private Color GetHintColor(int x, int y) //цвет цифр как подсказок к минам
         {
             int count = game.CountMinesAround(x, y);
             switch (count)
@@ -176,23 +161,24 @@ namespace ShahtyorGame.forms
             }
         }
 
-        private void UpdateGrid()
+        public void UpdateGrid() // public — контроллер вызывает это
         {
-            for(int i = 0; i < game.SizeMap; i++)
+            bool nearPit = game.IsPlayerNearPit(); // проверяем рядом ли пропасть
+
+            for (int i = 0; i < game.SizeMap; i++)
             {
-                for(int j = 0; j < game.SizeMap; j++) //пробегаю по каждой ячейке
+                for (int j = 0; j < game.SizeMap; j++) //пробегаю по каждой ячейке
                 {
                     DataGridViewCell cell = grid.Rows[i].Cells[j]; //считываю ячейку
 
                     if (game.Player.X == i && game.Player.Y == j) //если там игрок
                     {
                         cell.Value = "⛏";
-
-                        if (game.IsPlayerNearPit() && pitFlash)
+                        // мигаем красным если рядом пропасть
+                        if (nearPit && pitFlash)
                             cell.Style.BackColor = Color.Red;
                         else
                             cell.Style.BackColor = Color.LightBlue; //ячейка шахтера
-
                         cell.Style.ForeColor = Color.Black; //цвет символа
                         continue;
                     }
@@ -214,28 +200,33 @@ namespace ShahtyorGame.forms
             grid.ClearSelection(); //убираю выделение серое с ячеек
         }
 
-        private string GetCellDisplay(int x, int y)//отрисовываем на основе назначения клетки
+        private string GetCellDisplay(int x, int y) //отрисовываем на основе назначения клетки
         {
             switch (game.Map[x, y])
             {
-                case ShahtyorGame.enums.CellType.Artifact: // если в клетке артефакт
+                case CellType.Artifact: // если в клетке артефакт
                     return "💎";
 
-                case ShahtyorGame.enums.CellType.Pit:
+                case CellType.Pit: // если в клетке пропасть
                     return "🕳";
 
-                case ShahtyorGame.enums.CellType.EmptyPoint: // если клетка открыта и пуста
+                case CellType.Mine: // если в клетке мина
+                    return "💣";
+
+                case CellType.EmptyPoint:
+                    if (game.CollectedArtifacts[x, y]) // тут был артефакт — показываем иконку
+                        return "💎";
                     int minesAround = game.CountMinesAround(x, y);
                     if (minesAround > 0)
-                        return minesAround.ToString(); // показываем цифру
+                        return minesAround.ToString();
                     return ".";
-
+                    
                 default:
                     return ".";
             }
         }
 
-        private void ResetGrid() //обновление разметки, все пересоздаю
+        public void ResetGrid() //обновление разметки, все пересоздаю
         {
             grid.Columns.Clear();
             grid.Rows.Clear();
@@ -255,16 +246,15 @@ namespace ShahtyorGame.forms
             }
         }
 
-        private void UpdateStats() //обновляю статистику
+        public void UpdateStats() //обновляю статистику
         {
             lblHealth.Text = "❤️ Здоровье: " + game.Player.Health;
-            lblMaxHealth.Text = "Макс. здоровье: " + game.Player.MaxHealth;
             lblPickaxe.Text = "⛏️ Кирка: " + game.Player.PickaxeStrength;
             lblCoins.Text = "💰 Монеты: " + game.Player.Coins;
             lblLevel.Text = "📊 Уровень: " + game.CurrentLevel;
         }
 
-        private void UpdateStatus() //обрабытываем события
+        public void UpdateStatus() //обрабытываем события
         {
             lblStatus.Text = "Статус: " + game.ActionMessage;
             lblStatus.ForeColor = Color.Black;
@@ -281,79 +271,19 @@ namespace ShahtyorGame.forms
             else
                 lblStatus.BackColor = Color.White;
         }
+
         private void MainForm_Go(object sender, KeyEventArgs e) //движение по полю
         {
-            bool moved = false; //флаг
-
             switch (e.KeyCode)
             {
                 case Keys.Up:
-                    moved = game.TryMove(-1, 0);
-                    break;
-
                 case Keys.Down:
-                    moved = game.TryMove(1, 0);
-                    break;
-                
                 case Keys.Left:
-                    moved = game.TryMove(0, -1);
-                    break;
-                
                 case Keys.Right:
-                    moved = game.TryMove(0, 1);
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+                    controller.HandleKey(e.KeyCode); // передаём нажатие контроллеру
                     break;
-                
-                default:
-                    return;
-            }
-
-            e.Handled = true;
-            e.SuppressKeyPress = true;
-
-            if (moved) //если получилось двигаться
-            {
-                if (game.SteppedOnMine)
-                {
-                    game.SteppedOnMine = false; // сбрасываем флаг
-
-                    var anagram = game.GetRandomAnagram(); //берем анаграмму
-                    AnagramForm anagramForm = new AnagramForm(anagram.anagram, anagram.correct, anagram.hint);
-                    anagramForm.ShowDialog(); // открываем как диалог (блокирует игру)
-
-                    if (anagramForm.Solved) //решил
-                    {
-                        game.DefuseMine(); // обезвреживаем мину
-                        game.ActionMessage = "✅ Мина обезврежена!";
-                    }
-                    else
-                    {
-                        game.Player.Health -= 20;
-                        game.ActionMessage = "💥 Мина взорвалась! -20 здоровья";
-                    }
-                }
-
-                grid.ClearSelection();
-                UpdateGrid();
-                UpdateStats();
-                UpdateStatus();
-
-                // проверка поражения
-                if (!game.Player.IsAlive())
-                {
-                    MessageBox.Show("💀 Вы погибли! Игра окончена.");
-                    Application.Exit();
-                }
-
-                if (game.CollectedAllArtifacts()) //если собрал все артифакты
-                {
-                    MessageBox.Show("Ура! Все артефакты собраны! Переход на следующий уровень доступен!");
-                    game.NextLevel(); //загрузка нового левела
-                    ResetGrid(); //обновляю разметку
-                    UpdateGrid(); // обновляю ячейки
-                    UpdateStats(); // обновляю метки
-                    UpdateStatus(); //обновляю метку события
-                    this.Focus();
-                }
             }
         }
 
