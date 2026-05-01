@@ -62,8 +62,30 @@ namespace ShahtyorGame.controllers
                 // проверка победы на уровне
                 if (game.CollectedAllArtifacts())
                 {
-                    MessageBox.Show("Ура! Все артефакты собраны! Переход на следующий уровень доступен!");
+                    int finishedLevel = game.CurrentLevel;
+ 
+                    // Открываем магазин (кроме последнего уровня)
+                    if (finishedLevel < 5)
+                    {
+                        ShopForm shop = new ShopForm(game.Player, finishedLevel);
+                        shop.ShowDialog();
+                    }
+ 
+                    // Переходим на следующий уровень
                     game.NextLevel();
+ 
+                    // Если купили детектор — открываем все мины на новом уровне
+                    if (game.Player.HasDetector)
+                    {
+                        game.RevealAllMines();
+                        game.Player.HasDetector = false; // расходуем
+                        game.ActionMessage = "🔍 Детектор активирован — мины видны!";
+                    }
+                    else
+                    {
+                        game.ActionMessage = "Начался новый уровень";
+                    }
+ 
                     view.ResetGrid();
                     view.UpdateGrid();
                     view.UpdateStats();

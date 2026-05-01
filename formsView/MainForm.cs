@@ -31,7 +31,7 @@ namespace ShahtyorGame.forms
 
         private void InitializeGame()
         {
-            game = new Game(6); //инициализируем размер поля
+            game = new Game(); //инициализируем размер поля
             controller = new GameController(game, this); // создаём контроллер
 
             this.Text = "Шахтёр: Тайны глубин"; //название окна

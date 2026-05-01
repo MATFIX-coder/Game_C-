@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ShahtyorGame.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7cee3cc2b5ef90d3c8f1f7158c1fb04b3d330498")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0df065e348ca297ea734f07ac7184ce3e99491e3")]
 [assembly: System.Reflection.AssemblyProductAttribute("ShahtyorGame.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ShahtyorGame.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

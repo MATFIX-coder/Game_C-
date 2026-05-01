@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\ShahtyorGame.Tests"
   ],
-  "SelectedNode": "\\ShahtyorGame.csproj",
+  "SelectedNode": "\\ShahtyorGame.Tests\\GameTests.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -2,14 +2,15 @@ namespace ShahtyorGame.classes
 {
     public class Player
     {
-        public int X {get; set; } //позиция по иксу
-        public int Y {get; set; } //позиция по игрику
-        public int Health {get; set; } //здоровье
-        public int MaxHealth { get; set; } //максимальное здоровье
-        public int PickaxeStrength {get; set; } //прочность кирки
-        public int Coins {get; set; } //кол-во монет
+        public int X { get; set; }            // позиция по X
+        public int Y { get; set; }            // позиция по Y
+        public int Health { get; set; }       // текущее здоровье
+        public int MaxHealth { get; set; }    // максимальное здоровье
+        public int PickaxeStrength { get; set; } // прочность кирки
+        public int Coins { get; set; }        // монеты
+        public bool HasDetector { get; set; } // куплен ли детектор мин
 
-        public Player() //конструктор для игрока
+        public Player()
         {
             X = 0;
             Y = 0;
@@ -17,15 +18,16 @@ namespace ShahtyorGame.classes
             MaxHealth = 100;
             PickaxeStrength = 100;
             Coins = 0;
+            HasDetector = false;
         }
 
-        public void ResetPosition() //сброс позиции после завершения уровня
+        public void ResetPosition()
         {
             X = 0;
             Y = 0;
         }
 
-        public bool IsAlive() //проверка, что жив
+        public bool IsAlive()
         {
             return Health > 0;
         }
@@ -36,8 +38,8 @@ namespace ShahtyorGame.classes
             if (PickaxeStrength < 0)
                 PickaxeStrength = 0;
         }
-        
-        public bool HasPickaxe() //проверка целости кирки
+
+        public bool HasPickaxe()
         {
             return PickaxeStrength > 0;
         }

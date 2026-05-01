@@ -62,5 +62,14 @@ namespace ShahtyorGame.classes
             }
             return count;
         }
+
+        // Открывает клетки всех мин (эффект детектора)
+        public void RevealAllMines()
+        {
+            for (int i = 0; i < SizeMap; i++)
+                for (int j = 0; j < SizeMap; j++)
+                    if (Map[i, j] == CellType.Mine)
+                        DetectedPlace[i, j] = true;
+        }
     }
 }
