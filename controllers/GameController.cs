@@ -43,8 +43,8 @@ namespace ShahtyorGame.controllers
                     }
                     else
                     {
-                        game.Player.Health -= 20;
-                        game.ActionMessage = "💥 Мина взорвалась! -20 здоровья";
+                        game.Player.Health -= 15;
+                        game.ActionMessage = "💥 Мина взорвалась! -15 здоровья";
                     }
                 }
 
@@ -64,11 +64,16 @@ namespace ShahtyorGame.controllers
                 {
                     int finishedLevel = game.CurrentLevel;
  
-                    // Открываем магазин (кроме последнего уровня)
-                    if (finishedLevel < 5)
+                    // Открываем магазин после каждого уровня
+                    ShopForm shop = new ShopForm(game.Player, finishedLevel);
+                    shop.ShowDialog();
+
+                    // если прошли последний уровень — завершаем игру
+                    if (finishedLevel >= 5)
                     {
-                        ShopForm shop = new ShopForm(game.Player, finishedLevel);
-                        shop.ShowDialog();
+                        MessageBox.Show("🏆 Победа! Все уровни шахты пройдены.");
+                        Application.Exit();
+                        return;
                     }
  
                     // Переходим на следующий уровень

@@ -36,7 +36,7 @@ namespace ShahtyorGame.classes
                     if (Player.PickaxeStrength >= 15)
                     {
                         Player.PickaxeStrength -= 15;
-                        Player.Coins += 10;
+                        Player.Coins += 15;
                         CollectedArtifacts[newX, newY] = true; // помечаем что артефакт собран
                         Map[newX, newY] = CellType.EmptyPoint;
                         ActionMessage = "Артефакт добыт: +10 монет";

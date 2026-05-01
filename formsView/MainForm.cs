@@ -12,8 +12,10 @@ namespace ShahtyorGame.forms
         private Game game; //Игра
         private GameController controller; // контроллер — обрабатывает логику
         private DataGridView grid; //таблица разметка
+        private Panel statsPanel; //панель для меток
 
         private Label lblHealth; //метка здоровья
+        private Label lblMaxHealth; //метка максимального здоровья
         private Label lblPickaxe; //метка прочности
         private Label lblCoins; //метка монет
         private Label lblLevel; //метка уровня
@@ -22,11 +24,83 @@ namespace ShahtyorGame.forms
         private System.Windows.Forms.Timer pitWarningTimer; // таймер мигания при пропасти
         private bool pitFlash = false; // флаг состояния мигания — true/false чередуется
 
+        private const int CellSize = 55; //размер одной клетки
+        private const int SideIndent = 10; //отступ от края
+        private const int StatsTop = 10; //отступ панели сверху
+        private const int StatsHeight = 115; //высота панели статистики
+        private const int Gap = 10; //расстояние между блоками
+        private const int GridTop = StatsTop + StatsHeight + Gap; //отступ поля сверху
+        private const int StatusIndent = 10; //отступ статуса от поля
+        private const int StatusHeight = 50; //высота строки статуса
+        private const int BottomIndent = 20; //нижний отступ окна
+        private const int MinWindowWidth = 620; //минимальная ширина окна, чтобы текст не обрезался
+        private const int DarkLevelRadius = 1; //радиус видимости на тёмном уровне
+
         public MainForm() //основной конструктор игры
         {
             InitializeComponent();
             InitializeGame();
             this.KeyDown += MainForm_Go;
+        }
+
+        private int GetFieldSize() //считаю размер поля по размеру карты
+        {
+            return game.SizeMap * CellSize;
+        }
+
+        private int GetPanelWidth() //считаю ширину панели по размеру карты
+        {
+            return Math.Max(GetFieldSize() + 3, MinWindowWidth - SideIndent * 2);
+        }
+
+        private void ResizeWindowForMap() //обновляю размеры окна под текущий уровень
+        {
+            int fieldSize = GetFieldSize();
+            int panelWidth = GetPanelWidth();
+            int gridLeft = SideIndent + (panelWidth - fieldSize) / 2; //центрирую поле под верхней панелью
+
+            this.ClientSize = new Size(panelWidth + SideIndent * 2, GridTop + fieldSize + StatusIndent + StatusHeight + BottomIndent); //размер окна зависит от карты
+
+            if (statsPanel != null)
+            {
+                statsPanel.Location = new Point(SideIndent, StatsTop); //верхняя панель всегда сверху
+                statsPanel.Size = new Size(panelWidth, StatsHeight); //растягиваю верхнюю панель
+                LayoutStatsLabels(); //выравниваю метки внутри панели
+            }
+
+            if (grid != null)
+            {
+                grid.Location = new Point(gridLeft, GridTop); //поле всегда под панелью
+                grid.Size = new Size(fieldSize + 3, fieldSize + 3); //растягиваю поле без обрезания границ
+            }
+
+            if (lblStatus != null)
+            {
+                lblStatus.Location = new Point(SideIndent, GridTop + fieldSize + StatusIndent); //ставлю статус под полем
+                lblStatus.Size = new Size(panelWidth, StatusHeight); //растягиваю статус под ширину поля
+            }
+        }
+
+        private void LayoutStatsLabels() //выравниваю статистику внутри панели
+        {
+            int panelWidth = GetPanelWidth();
+            int columnWidth = (panelWidth - 30) / 2; //две равные колонки без наезда текста
+            int rightX = 20 + columnWidth;
+
+            lblHealth.Location = new Point(10, 10);
+            lblHealth.Size = new Size(columnWidth, 25);
+
+            lblMaxHealth.Location = new Point(rightX, 10);
+            lblMaxHealth.Size = new Size(columnWidth, 25);
+
+            lblPickaxe.Location = new Point(10, 45);
+            lblPickaxe.Size = new Size(columnWidth, 25);
+
+            lblCoins.Location = new Point(rightX, 45);
+            lblCoins.Size = new Size(columnWidth, 25);
+
+            lblLevel.Location = new Point(10, 80);
+            lblLevel.Size = new Size(panelWidth - 20, 25);
         }
 
         private void InitializeGame()
@@ -35,7 +109,6 @@ namespace ShahtyorGame.forms
             controller = new GameController(game, this); // создаём контроллер
 
             this.Text = "Шахтёр: Тайны глубин"; //название окна
-            this.ClientSize = new Size(360, 550); //размер окна изначально
             this.StartPosition = FormStartPosition.CenterScreen; //окно запускается по центру
             this.KeyPreview = true; // форма перехватывает нажатия клавиш раньше дочерних элементов
             this.BackColor = Color.LightGray; //задний фон серый
@@ -49,9 +122,9 @@ namespace ShahtyorGame.forms
             };
             pitWarningTimer.Start();
 
-            Panel statsPanel = new Panel(); //панель для меток
-            statsPanel.Location = new Point(10, 10);
-            statsPanel.Size = new Size(330, 80);
+            statsPanel = new Panel(); //панель для меток
+            statsPanel.Location = new Point(SideIndent, StatsTop);
+            statsPanel.Size = new Size(GetPanelWidth(), StatsHeight);
             statsPanel.BackColor = Color.White;
             statsPanel.BorderStyle = BorderStyle.FixedSingle;
 
@@ -62,31 +135,38 @@ namespace ShahtyorGame.forms
             lblHealth.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblHealth.Text = "❤️ Здоровье: 100";
 
+            //Метка максимального здоровья
+            lblMaxHealth = new Label();
+            lblMaxHealth.Location = new Point(180, 10);
+            lblMaxHealth.Size = new Size(150, 25);
+            lblMaxHealth.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblMaxHealth.Text = "💖 Максимальное здоровье: 100";
+
             //Метка Прочности
             lblPickaxe = new Label();
-            lblPickaxe.Location = new Point(10, 40);
+            lblPickaxe.Location = new Point(10, 45);
             lblPickaxe.Size = new Size(150, 25);
             lblPickaxe.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblPickaxe.Text = "⛏️ Кирка: 100";
+            lblPickaxe.Text = "⛏️ Кирка: 150";
 
             //Метка Монет
             lblCoins = new Label();
-            lblCoins.Location = new Point(170, 10);
+            lblCoins.Location = new Point(180, 45);
             lblCoins.Size = new Size(150, 25);
             lblCoins.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblCoins.Text = "💰 Монеты: 0";
 
             //Метка Уровень
             lblLevel = new Label();
-            lblLevel.Location = new Point(170, 40);
+            lblLevel.Location = new Point(10, 80);
             lblLevel.Size = new Size(150, 25);
             lblLevel.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblLevel.Text = "📊 Уровень: 1";
 
             //Метка события
             lblStatus = new Label();
-            lblStatus.Location = new Point(10, 440);
-            lblStatus.Size = new Size(330, 50);
+            lblStatus.Location = new Point(SideIndent, GridTop + GetFieldSize() + StatusIndent);
+            lblStatus.Size = new Size(GetPanelWidth(), StatusHeight);
             lblStatus.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblStatus.BorderStyle = BorderStyle.FixedSingle;
             lblStatus.BackColor = Color.White;
@@ -95,14 +175,15 @@ namespace ShahtyorGame.forms
 
             //добавляю метки на панель
             statsPanel.Controls.Add(lblHealth);
+            statsPanel.Controls.Add(lblMaxHealth);
             statsPanel.Controls.Add(lblPickaxe);
             statsPanel.Controls.Add(lblCoins);
             statsPanel.Controls.Add(lblLevel);
             this.Controls.Add(statsPanel); //добавляю панель на форму
 
             grid = new DataGridView(); //создаю разметку
-            grid.Location = new Point(10, 100);
-            grid.Size = new Size(330, 380);
+            grid.Location = new Point(SideIndent, GridTop);
+            grid.Size = new Size(GetFieldSize() + 3, GetFieldSize() + 3);
 
             grid.RowHeadersVisible = false; // скрыть заголовки строк и столбцов
             grid.ColumnHeadersVisible = false;
@@ -130,17 +211,19 @@ namespace ShahtyorGame.forms
             // Настраиваю столбцы
             for (int i = 0; i < game.SizeMap; i++)
             {
-                grid.Columns[i].Width = 55;
+                grid.Columns[i].Width = CellSize;
                 grid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable; // без сортировки
             }
 
             // Создаём строки
             for (int i = 0; i < game.SizeMap; i++)
             {
-                grid.Rows[i].Height = 55;
+                grid.Rows[i].Height = CellSize;
             }
 
             this.Controls.Add(grid); //добавляю разметку на форму
+
+            ResizeWindowForMap(); //выравниваю окно и элементы после создания поля
 
             UpdateGrid(); //обновляю содержимые клеток
             UpdateStats(); //обновляю содержимое меток
@@ -159,6 +242,17 @@ namespace ShahtyorGame.forms
                 case 5: return Color.DarkRed;
                 default: return Color.Black;
             }
+        }
+
+        private bool IsCellVisibleOnDarkLevel(int x, int y) //проверяю видимость клетки на тёмном уровне
+        {
+            if (!game.IsDarkLevel)
+                return true;
+
+            int dx = Math.Abs(game.Player.X - x);
+            int dy = Math.Abs(game.Player.Y - y);
+
+            return dx <= DarkLevelRadius && dy <= DarkLevelRadius;
         }
 
         public void UpdateGrid() // public — контроллер вызывает это
@@ -180,6 +274,14 @@ namespace ShahtyorGame.forms
                         else
                             cell.Style.BackColor = Color.LightBlue; //ячейка шахтера
                         cell.Style.ForeColor = Color.Black; //цвет символа
+                        continue;
+                    }
+
+                    if (!IsCellVisibleOnDarkLevel(i, j)) //если тёмный уровень и клетка далеко
+                    {
+                        cell.Value = "";
+                        cell.Style.BackColor = Color.Black;
+                        cell.Style.ForeColor = Color.White;
                         continue;
                     }
 
@@ -228,13 +330,15 @@ namespace ShahtyorGame.forms
 
         public void ResetGrid() //обновление разметки, все пересоздаю
         {
+            ResizeWindowForMap(); //обновляю размер окна под новую карту
+
             grid.Columns.Clear();
             grid.Rows.Clear();
 
             for (int i = 0; i < game.SizeMap; i++)
             {
                 DataGridViewTextBoxColumn column = new DataGridViewTextBoxColumn();
-                column.Width = 55;
+                column.Width = CellSize;
                 column.SortMode = DataGridViewColumnSortMode.NotSortable;
                 grid.Columns.Add(column);
             }
@@ -242,13 +346,16 @@ namespace ShahtyorGame.forms
             for (int i = 0; i < game.SizeMap; i++)
             {
                 grid.Rows.Add();
-                grid.Rows[i].Height = 55;
+                grid.Rows[i].Height = CellSize;
             }
+
+            ResizeWindowForMap(); //после пересоздания поля снова выравниваю элементы
         }
 
         public void UpdateStats() //обновляю статистику
         {
             lblHealth.Text = "❤️ Здоровье: " + game.Player.Health;
+            lblMaxHealth.Text = "💖 Максимальное здоровье: " + game.Player.MaxHealth;
             lblPickaxe.Text = "⛏️ Кирка: " + game.Player.PickaxeStrength;
             lblCoins.Text = "💰 Монеты: " + game.Player.Coins;
             lblLevel.Text = "📊 Уровень: " + game.CurrentLevel;

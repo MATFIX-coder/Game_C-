@@ -16,7 +16,7 @@ namespace ShahtyorGame.classes
             Y = 0;
             Health = 100;
             MaxHealth = 100;
-            PickaxeStrength = 100;
+            PickaxeStrength = 150;
             Coins = 0;
             HasDetector = false;
         }

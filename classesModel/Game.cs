@@ -10,6 +10,7 @@ namespace ShahtyorGame.classes
         public bool[,] DetectedPlace { get; private set; } //отображение скрыта ли место на поле
         public Player Player { get; private set; } //игрок
         public int CurrentLevel { get; private set; } //текущий левел
+        public bool IsDarkLevel { get; private set; } //флаг тёмного уровня
         public string ActionMessage { get; set; } //свойства для метки события
         private Random random = new Random(); // генератор случайных чисел
         public bool SteppedOnMine { get; set; } // флаг игрок наступил на мину
@@ -17,10 +18,10 @@ namespace ShahtyorGame.classes
         // список всех анаграмм
         private (string anagram, string correct, string hint)[] anagrams =
         {
-            ("АКМЯИ", "МЫШКА", "Маленький грызун"),
+            ("ЫКШАМ", "МЫШКА", "Маленький грызун"),
             ("НОСЛЕЦ", "СОЛНЦЕ", "Светит днём"),
             ("АГНИК", "КНИГА", "Источник знаний"),
-            ("РОБАСТА", "РАБОТА", "То, что делаешь каждый день"),
+            ("РБОТАО", "РАБОТА", "То, что делаешь каждый день"),
             ("ТОМОЛОК", "МОЛОТОК", "Инструмент для забивания"),
         };
 
@@ -32,6 +33,7 @@ namespace ShahtyorGame.classes
             DetectedPlace = new bool[SizeMap, SizeMap];
             Player = new Player();
             CurrentLevel = 1;
+            IsDarkLevel = false;
             ActionMessage = "Игра началась";
             GenerateLevel();
         }

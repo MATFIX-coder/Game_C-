@@ -39,8 +39,8 @@ namespace ShahtyorGame.forms
             (
                 "⛏️",
                 "Заточка кирки",
-                "+20 к прочности",
-                20,
+                "Прочность на максимум",
+                15,
                 p =>
                 {
                     p.PickaxeStrength += 20;
