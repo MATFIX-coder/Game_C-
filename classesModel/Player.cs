@@ -9,6 +9,7 @@ namespace ShahtyorGame.classes
         public int PickaxeStrength { get; set; } // прочность кирки
         public int Coins { get; set; }        // монеты
         public bool HasDetector { get; set; } // куплен ли детектор мин
+        public int Flashlights { get; set; }  // количество фонариков
 
         public Player()
         {
@@ -19,6 +20,7 @@ namespace ShahtyorGame.classes
             PickaxeStrength = 150;
             Coins = 0;
             HasDetector = false;
+            Flashlights = 0;
         }
 
         public void ResetPosition()

@@ -20,6 +20,7 @@ namespace ShahtyorGame.forms
         private Label lblCoins; //метка монет
         private Label lblLevel; //метка уровня
         private Label lblStatus; //метка события
+        private Label lblFlashlights; // метка фонариков
 
         private System.Windows.Forms.Timer pitWarningTimer; // таймер мигания при пропасти
         private bool pitFlash = false; // флаг состояния мигания — true/false чередуется
@@ -27,7 +28,7 @@ namespace ShahtyorGame.forms
         private const int CellSize = 55; //размер одной клетки
         private const int SideIndent = 10; //отступ от края
         private const int StatsTop = 10; //отступ панели сверху
-        private const int StatsHeight = 115; //высота панели статистики
+        private const int StatsHeight = 125; //высота панели статистики
         private const int Gap = 10; //расстояние между блоками
         private const int GridTop = StatsTop + StatsHeight + Gap; //отступ поля сверху
         private const int StatusIndent = 10; //отступ статуса от поля
@@ -100,7 +101,10 @@ namespace ShahtyorGame.forms
             lblCoins.Size = new Size(columnWidth, 25);
 
             lblLevel.Location = new Point(10, 80);
-            lblLevel.Size = new Size(panelWidth - 20, 25);
+            lblLevel.Size = new Size(columnWidth, 25);
+
+            lblFlashlights.Location = new Point(rightX, 80);
+            lblFlashlights.Size = new Size(columnWidth, 25);
         }
 
         private void InitializeGame()
@@ -163,6 +167,13 @@ namespace ShahtyorGame.forms
             lblLevel.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblLevel.Text = "📊 Уровень: 1";
 
+            // Метка фонариков
+            lblFlashlights = new Label();
+            lblFlashlights.Location = new Point(180, 80);
+            lblFlashlights.Size = new Size(150, 25);
+            lblFlashlights.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblFlashlights.Text = "🔦 Фонарики: 0";
+
             //Метка события
             lblStatus = new Label();
             lblStatus.Location = new Point(SideIndent, GridTop + GetFieldSize() + StatusIndent);
@@ -179,6 +190,7 @@ namespace ShahtyorGame.forms
             statsPanel.Controls.Add(lblPickaxe);
             statsPanel.Controls.Add(lblCoins);
             statsPanel.Controls.Add(lblLevel);
+            statsPanel.Controls.Add(lblFlashlights);
             this.Controls.Add(statsPanel); //добавляю панель на форму
 
             grid = new DataGridView(); //создаю разметку
@@ -255,8 +267,38 @@ namespace ShahtyorGame.forms
             return dx <= DarkLevelRadius && dy <= DarkLevelRadius;
         }
 
+        private void TryUseFlashlight() // пробуем автоматически использовать фонарик рядом с пропастью
+        {
+            if (game.Player.Flashlights <= 0) // фонариков нет — ничего не делаем
+                return;
+
+            int x = game.Player.X;
+            int y = game.Player.Y;
+
+            int[] dx = { -1, 1, 0, 0 }; // 4 направления без диагоналей
+            int[] dy = { 0, 0, -1, 1 };
+
+            for (int i = 0; i < 4; i++)
+            {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                if (nx < 0 || ny < 0 || nx >= game.SizeMap || ny >= game.SizeMap) // за границей
+                    continue;
+
+                if (game.Map[nx, ny] == CellType.Pit && !game.DetectedPlace[nx, ny]) // пропасть рядом и не открыта
+                {
+                    game.DetectedPlace[nx, ny] = true; // открываем пропасть
+                    game.Player.Flashlights--;          // тратим фонарик
+                    game.ActionMessage = "🔦 Фонарик подсветил пропасть рядом!";
+                    return; // открываем только первую найденную
+                }
+            }
+        }
+
         public void UpdateGrid() // public — контроллер вызывает это
         {
+            TryUseFlashlight();
             bool nearPit = game.IsPlayerNearPit(); // проверяем рядом ли пропасть
 
             for (int i = 0; i < game.SizeMap; i++)
@@ -359,6 +401,7 @@ namespace ShahtyorGame.forms
             lblPickaxe.Text = "⛏️ Кирка: " + game.Player.PickaxeStrength;
             lblCoins.Text = "💰 Монеты: " + game.Player.Coins;
             lblLevel.Text = "📊 Уровень: " + game.CurrentLevel;
+            lblFlashlights.Text = "🔦 Фонарики: " + game.Player.Flashlights;
         }
 
         public void UpdateStatus() //обрабытываем события

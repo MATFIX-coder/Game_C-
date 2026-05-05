@@ -32,7 +32,7 @@ namespace ShahtyorGame.classes
 
                 if (nx >= 0 && ny >= 0 && nx < SizeMap && ny < SizeMap)
                 {
-                    if (Map[nx, ny] == CellType.Pit)
+                    if (Map[nx, ny] == CellType.Pit && !DetectedPlace[nx, ny]) // мигаем только на неоткрытые пропасти
                         return true;
                 }
             }

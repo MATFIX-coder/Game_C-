@@ -56,6 +56,16 @@ namespace ShahtyorGame.forms
                     p.HasDetector = true;
                 }
             ),
+            (
+                "🔦",
+                "Фонарик",
+                "Автоматически открывает\nближайшую пропасть рядом",
+                20,
+                p =>
+                {
+                    p.Flashlights += 1; // +1 фонарик
+                }
+            ),
         };
 
         public ShopForm(Player player, int level)
@@ -63,7 +73,7 @@ namespace ShahtyorGame.forms
             this.player = player;
 
             this.Text = "🛒 Магазин шахтёра";
-            this.Size = new Size(480, 560);
+            this.Size = new Size(480, 650);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.FromArgb(30, 28, 24);       // тёмный фон
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -100,7 +110,7 @@ namespace ShahtyorGame.forms
             // --- Панель товаров ---
             itemsPanel = new Panel();
             itemsPanel.Location = new Point(20, 100);
-            itemsPanel.Size = new Size(420, 370);
+            itemsPanel.Size = new Size(420, 455);
             itemsPanel.BackColor = Color.Transparent;
             this.Controls.Add(itemsPanel);
 
@@ -114,7 +124,7 @@ namespace ShahtyorGame.forms
             btnContinue.BackColor = Color.FromArgb(255, 210, 80);
             btnContinue.FlatStyle = FlatStyle.Flat;
             btnContinue.FlatAppearance.BorderSize = 0;
-            btnContinue.Location = new Point(20, 480);
+            btnContinue.Location = new Point(20, 570);
             btnContinue.Size = new Size(420, 42);
             btnContinue.Cursor = Cursors.Hand;
             btnContinue.Click += (s, e) => this.Close();
