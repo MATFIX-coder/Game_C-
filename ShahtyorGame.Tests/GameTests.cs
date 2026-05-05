@@ -23,8 +23,9 @@ namespace ShahtyorGame.Tests
             Assert.That(player.Y, Is.EqualTo(0));
             Assert.That(player.Health, Is.EqualTo(100));
             Assert.That(player.MaxHealth, Is.EqualTo(100));
-            Assert.That(player.PickaxeStrength, Is.EqualTo(100));
+            Assert.That(player.PickaxeStrength, Is.EqualTo(150));
             Assert.That(player.Coins, Is.EqualTo(0));
+            Assert.That(player.Flashlights, Is.EqualTo(0));
         }
 
         [Test]
@@ -45,7 +46,7 @@ namespace ShahtyorGame.Tests
         public void Player_UsePickaxe_ReducesStrengthByOne() // кирка теряет 1 прочность за использование
         {
             player.UsePickaxe();
-            Assert.That(player.PickaxeStrength, Is.EqualTo(99));
+            Assert.That(player.PickaxeStrength, Is.EqualTo(149));
         }
 
         [Test]

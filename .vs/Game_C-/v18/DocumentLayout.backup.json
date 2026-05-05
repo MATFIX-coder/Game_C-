@@ -1,7 +1,52 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\aksdi\\Desktop\\Game_C-\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\formsview\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:formsview\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\formsview\\shopform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:formsview\\shopform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\enums\\celltype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:enums\\celltype.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:controllers\\gamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\classesmodel\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:classesmodel\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\classesmodel\\game.logic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:classesmodel\\game.logic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\classesmodel\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:classesmodel\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\formsview\\anagramform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:formsview\\anagramform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\classesmodel\\game.level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:classesmodel\\game.level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2024FAD7-2FA6-4EA8-993C-F8A53ABBBDA6}|ShahtyorGame.Tests\\ShahtyorGame.Tests.csproj|c:\\users\\aksdi\\desktop\\game_c-\\shahtyorgame.tests\\gametests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2024FAD7-2FA6-4EA8-993C-F8A53ABBBDA6}|ShahtyorGame.Tests\\ShahtyorGame.Tests.csproj|solutionrelative:shahtyorgame.tests\\gametests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|c:\\users\\aksdi\\desktop\\game_c-\\classesmodel\\game.checks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4914ADC4-943E-45B6-3C7C-84B66D0DA6C8}|ShahtyorGame.csproj|solutionrelative:classesmodel\\game.checks.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +54,154 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "GameTests.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\ShahtyorGame.Tests\\GameTests.cs",
+              "RelativeDocumentMoniker": "ShahtyorGame.Tests\\GameTests.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\ShahtyorGame.Tests\\GameTests.cs",
+              "RelativeToolTip": "ShahtyorGame.Tests\\GameTests.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:55:26.453Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Game.Checks.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Game.Checks.cs",
+              "RelativeDocumentMoniker": "classesModel\\Game.Checks.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Game.Checks.cs",
+              "RelativeToolTip": "classesModel\\Game.Checks.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:53:05.823Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Game.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Game.cs",
+              "RelativeDocumentMoniker": "classesModel\\Game.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Game.cs",
+              "RelativeToolTip": "classesModel\\Game.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:53:04.823Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Game.Level.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Game.Level.cs",
+              "RelativeDocumentMoniker": "classesModel\\Game.Level.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Game.Level.cs",
+              "RelativeToolTip": "classesModel\\Game.Level.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:53:03.867Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Game.Logic.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Game.Logic.cs",
+              "RelativeDocumentMoniker": "classesModel\\Game.Logic.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Game.Logic.cs",
+              "RelativeToolTip": "classesModel\\Game.Logic.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:53:02.737Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Player.cs",
+              "RelativeDocumentMoniker": "classesModel\\Player.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\classesModel\\Player.cs",
+              "RelativeToolTip": "classesModel\\Player.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:53:01.832Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GameController.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\controllers\\GameController.cs",
+              "RelativeDocumentMoniker": "controllers\\GameController.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\controllers\\GameController.cs",
+              "RelativeToolTip": "controllers\\GameController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:53:00.832Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CellType.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\enums\\CellType.cs",
+              "RelativeDocumentMoniker": "enums\\CellType.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\enums\\CellType.cs",
+              "RelativeToolTip": "enums\\CellType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:52:52.172Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ShopForm.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\formsView\\ShopForm.cs",
+              "RelativeDocumentMoniker": "formsView\\ShopForm.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\formsView\\ShopForm.cs",
+              "RelativeToolTip": "formsView\\ShopForm.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:52:42.022Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainForm.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\formsView\\MainForm.cs",
+              "RelativeDocumentMoniker": "formsView\\MainForm.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\formsView\\MainForm.cs",
+              "RelativeToolTip": "formsView\\MainForm.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAL0BAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:52:07.941Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AnagramForm.cs",
+              "DocumentMoniker": "C:\\Users\\aksdi\\Desktop\\Game_C-\\formsView\\AnagramForm.cs",
+              "RelativeDocumentMoniker": "formsView\\AnagramForm.cs",
+              "ToolTip": "C:\\Users\\aksdi\\Desktop\\Game_C-\\formsView\\AnagramForm.cs",
+              "RelativeToolTip": "formsView\\AnagramForm.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-05T14:52:04.056Z",
+              "EditorCaption": ""
             }
           ]
         }
