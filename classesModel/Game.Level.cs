@@ -17,7 +17,7 @@ namespace ShahtyorGame.classes
         {
             return CurrentLevel switch
             {
-                1 => new LevelConfig { Size = 6, Mines = 2, Pits = 0, Artifacts = 3, IsDark = true },
+                1 => new LevelConfig { Size = 6, Mines = 2, Pits = 0, Artifacts = 3, IsDark = false },
                 2 => new LevelConfig { Size = 7, Mines = 4, Pits = 1, Artifacts = 3, IsDark = false },
                 3 => new LevelConfig { Size = 7, Mines = 5, Pits = 3, Artifacts = 4, IsDark = true },
                 4 => new LevelConfig { Size = 8, Mines = 7, Pits = 4, Artifacts = 4, IsDark = false },
