@@ -115,7 +115,8 @@ namespace ShahtyorGame.forms
             this.Text = "Шахтёр: Тайны глубин"; //название окна
             this.StartPosition = FormStartPosition.CenterScreen; //окно запускается по центру
             this.KeyPreview = true; // форма перехватывает нажатия клавиш раньше дочерних элементов
-            this.BackColor = Color.LightGray; //задний фон серый
+            this.BackgroundImage = Image.FromFile("заставка без надписи.png");
+            this.BackgroundImageLayout = ImageLayout.Stretch; //растянуть на всё окно
 
             pitWarningTimer = new System.Windows.Forms.Timer();
             pitWarningTimer.Interval = 300;
@@ -129,8 +130,8 @@ namespace ShahtyorGame.forms
             statsPanel = new Panel(); //панель для меток
             statsPanel.Location = new Point(SideIndent, StatsTop);
             statsPanel.Size = new Size(GetPanelWidth(), StatsHeight);
-            statsPanel.BackColor = Color.White;
-            statsPanel.BorderStyle = BorderStyle.FixedSingle;
+            statsPanel.BackColor = Color.FromArgb(180, Color.White);
+            statsPanel.BorderStyle = BorderStyle.None;
 
             //Метка Здоровье
             lblHealth = new Label();
@@ -138,6 +139,7 @@ namespace ShahtyorGame.forms
             lblHealth.Size = new Size(150, 25);
             lblHealth.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblHealth.Text = "❤️ Здоровье: 100";
+            lblHealth.BackColor = Color.Transparent;
 
             //Метка максимального здоровья
             lblMaxHealth = new Label();
@@ -145,6 +147,7 @@ namespace ShahtyorGame.forms
             lblMaxHealth.Size = new Size(150, 25);
             lblMaxHealth.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblMaxHealth.Text = "💖 Максимальное здоровье: 100";
+            lblMaxHealth.BackColor = Color.Transparent;
 
             //Метка Прочности
             lblPickaxe = new Label();
@@ -152,6 +155,7 @@ namespace ShahtyorGame.forms
             lblPickaxe.Size = new Size(150, 25);
             lblPickaxe.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblPickaxe.Text = "⛏️ Кирка: 150";
+            lblPickaxe.BackColor = Color.Transparent;
 
             //Метка Монет
             lblCoins = new Label();
@@ -159,6 +163,7 @@ namespace ShahtyorGame.forms
             lblCoins.Size = new Size(150, 25);
             lblCoins.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblCoins.Text = "💰 Монеты: 0";
+            lblCoins.BackColor = Color.Transparent;
 
             //Метка Уровень
             lblLevel = new Label();
@@ -166,6 +171,7 @@ namespace ShahtyorGame.forms
             lblLevel.Size = new Size(150, 25);
             lblLevel.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblLevel.Text = "📊 Уровень: 1";
+            lblLevel.BackColor = Color.Transparent;
 
             // Метка фонариков
             lblFlashlights = new Label();
@@ -173,6 +179,7 @@ namespace ShahtyorGame.forms
             lblFlashlights.Size = new Size(150, 25);
             lblFlashlights.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblFlashlights.Text = "🔦 Фонарики: 0";
+            lblFlashlights.BackColor = Color.Transparent;
 
             //Метка события
             lblStatus = new Label();
@@ -180,7 +187,7 @@ namespace ShahtyorGame.forms
             lblStatus.Size = new Size(GetPanelWidth(), StatusHeight);
             lblStatus.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblStatus.BorderStyle = BorderStyle.FixedSingle;
-            lblStatus.BackColor = Color.White;
+            lblStatus.BackColor = Color.FromArgb(200, Color.White);
             lblStatus.TextAlign = ContentAlignment.MiddleLeft;
             this.Controls.Add(lblStatus);
 
@@ -196,6 +203,8 @@ namespace ShahtyorGame.forms
             grid = new DataGridView(); //создаю разметку
             grid.Location = new Point(SideIndent, GridTop);
             grid.Size = new Size(GetFieldSize() + 3, GetFieldSize() + 3);
+            grid.BackgroundColor = Color.White;
+            grid.BorderStyle = BorderStyle.None;
 
             grid.RowHeadersVisible = false; // скрыть заголовки строк и столбцов
             grid.ColumnHeadersVisible = false;
