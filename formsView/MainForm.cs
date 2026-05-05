@@ -296,7 +296,7 @@ namespace ShahtyorGame.forms
             }
         }
 
-        public void UpdateGrid() // public — контроллер вызывает это
+        public void UpdateGrid()
         {
             TryUseFlashlight();
             bool nearPit = game.IsPlayerNearPit(); // проверяем рядом ли пропасть
