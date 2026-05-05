@@ -306,16 +306,29 @@ namespace ShahtyorGame.forms
                 for (int j = 0; j < game.SizeMap; j++) //пробегаю по каждой ячейке
                 {
                     DataGridViewCell cell = grid.Rows[i].Cells[j]; //считываю ячейку
+                    cell.Style.Font = new Font("Segoe UI Emoji", 18, FontStyle.Regular); //возвращаю обычный шрифт клетки
 
                     if (game.Player.X == i && game.Player.Y == j) //если там игрок
                     {
-                        cell.Value = "⛏";
+                        int minesAroundPlayer = game.CountMinesAround(i, j); //считаю мины рядом с игроком
+
+                        if (minesAroundPlayer > 0)
+                            cell.Value = "⛏ " + minesAroundPlayer; //показываю шахтёра и число мин рядом
+                        else
+                            cell.Value = "⛏";
+
+                        cell.Style.Font = new Font("Segoe UI Emoji", 13, FontStyle.Bold); //делаю цифру заметнее
+
                         // мигаем красным если рядом пропасть
                         if (nearPit && pitFlash)
                             cell.Style.BackColor = Color.Red;
                         else
                             cell.Style.BackColor = Color.LightBlue; //ячейка шахтера
-                        cell.Style.ForeColor = Color.Black; //цвет символа
+
+                        if (minesAroundPlayer > 0)
+                            cell.Style.ForeColor = GetHintColor(i, j); //цвет
+                        else
+                            cell.Style.ForeColor = Color.Black;
                         continue;
                     }
 
@@ -406,7 +419,12 @@ namespace ShahtyorGame.forms
 
         public void UpdateStatus() //обрабытываем события
         {
-            lblStatus.Text = "Статус: " + game.ActionMessage;
+            int minesAroundPlayer = game.CountMinesAround(game.Player.X, game.Player.Y); //считаю мины рядом с игроком
+
+            if (minesAroundPlayer > 0)
+                lblStatus.Text = "Статус: " + game.ActionMessage + " | ⚠️ Рядом мин: " + minesAroundPlayer;
+            else
+                lblStatus.Text = "Статус: " + game.ActionMessage;
             lblStatus.ForeColor = Color.Black;
 
             //устанавливаю цвет фона
